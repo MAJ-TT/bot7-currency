@@ -4,8 +4,8 @@ module.exports = {
 	cooldown: 3,
 	data: new SlashCommandBuilder()
 		.setName('ping')
-		.setDescription('Replies with Pong!'),
+		.setDescription('Replies with the latency'),
 	async execute(interaction) {
-		await interaction.reply('Pong!');
+		await interaction.reply(`Pong! \nLatency is ${Date.now() - interaction.createdTimestamp}ms.`);
 	},
 };
