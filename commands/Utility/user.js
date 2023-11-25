@@ -12,7 +12,7 @@ module.exports = {
 			.setTitle(`🙋‍♂️ ${interaction.user.username}`)
 			.setThumbnail(interaction.user.avatarURL())
 			.setDescription(
-				`oined on ${interaction.member.joinedAt}.`,
+				`Joined on ${interaction.member.joinedAt}.`,
 			);
 		await interaction.reply({ embeds: [embed] });
 	},
