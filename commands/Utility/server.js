@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	cooldown: 5,
@@ -6,7 +7,14 @@ module.exports = {
 		.setName('server')
 		.setDescription('Provides information about the server.'),
 	async execute(interaction) {
-		// interaction.guild is the object representing the Guild in which the command was run
-		await interaction.reply(`This server is ${interaction.guild.name} and has ${interaction.guild.memberCount} members.`);
+		const embed = new EmbedBuilder()
+			.setColor('#000001')
+			.setTitle(`🏯 ${interaction.guild.name}`)
+			.setThumbnail(interaction.guild.iconURL())
+			.setDescription(
+				`This server has ${interaction.guild.memberCount} members.`,
+			);
+
+		await interaction.reply({ embeds: [embed] });
 	},
 };
