@@ -1,15 +1,32 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const User = require('../../models/user');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('balance')
-		.setDescription('Get your current balance.'),
+		.setDescription('Check your balance.'),
 	async execute(interaction) {
-		const user = interaction.user.id;
-		const userData = await interaction.client.currency.findOne({ userId: user });
-		if (!userData) {
-			return interaction.reply('You have no currency yet!');
+		try {
+			await interaction.deferReply();
+
+			const user = await User.findOne({ discordId: interaction.user.id });
+			if (!user) {
+				return interaction.editReply('You do not have an account yet. Please create one.');
+			}
+
+			const embed = new EmbedBuilder()
+				.setTitle(`${interaction.user.username}'s Balance`)
+				.addField('Wallet', user.wallet, true)
+				.addField('Bank', `${user.bank}/${user.bankSpace}`, true)
+				.addField('Total Deposited', user.totalDeposited, true)
+				.addField('Total Withdrawn', user.totalWithdrawn, true)
+				.setColor('BLUE');
+
+			await interaction.editReply({ embeds: [embed] });
 		}
-		return interaction.reply(`Your current balance is ${userData.balance}`);
+		catch (error) {
+			console.error('Error executing balance:', error);
+			await interaction.editReply('There was an error trying to fetch your balance. Please try again later.');
+		}
 	},
 };

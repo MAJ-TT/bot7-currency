@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token, mongo_URI } = require('./config.json');
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 const deployCommands = require('./deploy-commands.js');
 
 const discordClient = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -41,19 +41,16 @@ for (const file of eventFiles) {
 	}
 }
 
-const mongoClient = new MongoClient(mongo_URI);
 
-mongoClient.connect()
+mongoose.connect(mongo_URI)
 	.then(() => {
-		console.log('Connected to MongoDB');
-		const db = mongoClient.db('currency');
-		discordClient.currency = db.collection('currency');
+		console.log('Connected to MongoDB via Mongoose');
 
 		deployCommands();
 		return discordClient.login(token);
 	})
 	.then(() => {
-		console.log('Logged in to Discord');
+		console.log('Okay, Yeah its working.');
 	})
 	.catch(err => {
 		console.error('Error:', err);
