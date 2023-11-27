@@ -1,8 +1,8 @@
 const { MongoClient } = require('mongodb');
+const { mongo_URI } = require('./config.json');
 
 async function checkDatabaseStatus() {
-	const uri = 'mongodb+srv://majtt:9KpP4tgnSm4WPz@cluster0.3ykphqg.mongodb.net/?retryWrites=true&w=majority';
-	const client = new MongoClient(uri);
+	const client = new MongoClient(mongo_URI);
 
 	try {
 		// Connect to the MongoDB cluster
